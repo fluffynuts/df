@@ -1,0 +1,11 @@
+{
+  "name": "df",
+  "version": "1.0.0",
+  "description": "a minimal df clone for windows",
+  "scripts": {
+      "build": "dotnet build src/df.sln",
+      "publish": "dotnet publish src/df/df.csproj --configuration Release --framework net6.0 --self-contained True --output Publish --runtime win-x64 --verbosity Normal /property:PublishTrimmed=True /property:PublishSingleFile=True /property:IncludeNativeLibrariesForSelfExtract=True /property:DebugType=None /property:DebugSymbols=False /property:EnableCompressionInSingleFile=True"
+  },
+  "author": "",
+  "license": "BSD-3-Clause"
+}
