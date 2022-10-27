@@ -1,7 +1,7 @@
 ﻿using df;
 using PeanutButter.EasyArgs;
 
-var suffixes = new[] { "B", "K", "M", "G", "P" };
+var suffixes = new[] { "B", "K", "M", "G", "T", "P" };
 
 var options = args.ParseTo<ProgramOptions>(out _, new ParserOptions()
 {
