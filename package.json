@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "a minimal df clone for windows",
   "scripts": {
-      "build": "dotnet build src/df.sln",
-      "publish": "dotnet publish src/df/df.csproj --configuration Release --framework net6.0 --self-contained True --output Publish --runtime win-x64 --verbosity Normal /property:PublishTrimmed=True /property:PublishSingleFile=True /property:IncludeNativeLibrariesForSelfExtract=True /property:DebugType=None /property:DebugSymbols=False /property:EnableCompressionInSingleFile=True"
+    "build": "dotnet build src/df.sln",
+    "publish": "dotnet publish src/df/df.csproj --configuration Release --framework net7.0 --self-contained True --output Publish --runtime win-x64 --verbosity Normal /property:PublishTrimmed=True /property:PublishSingleFile=True /property:IncludeNativeLibrariesForSelfExtract=True /property:DebugType=None /property:DebugSymbols=False /property:EnableCompressionInSingleFile=True /property:TrimMode=partial",
+    "publish-net6.0": "dotnet publish src/df/df.csproj --configuration Release --framework net6.0 --self-contained True --output Publish --runtime win-x64 --verbosity Normal /property:PublishTrimmed=True /property:PublishSingleFile=True /property:IncludeNativeLibrariesForSelfExtract=True /property:DebugType=None /property:DebugSymbols=False /property:EnableCompressionInSingleFile=True /property:TrimMode=copyused"
   },
   "author": "",
-  "license": "BSD-3-Clause"
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+  }
 }
