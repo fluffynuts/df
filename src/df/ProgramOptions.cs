@@ -4,6 +4,7 @@
     {
         public bool HumanReadable { get; set; }
         public bool StandardInternationalUnits { get; set; }
+        public bool Verbose { get; set; }
 
         public static ProgramOptions From(string[] args)
         {
@@ -24,6 +25,10 @@
                         ShowHelp();
                         Environment.Exit(0);
                         break;
+                    case "-v":
+                    case "--verbose":
+                        result.Verbose = true;
+                        break;
                 }
             }
 
@@ -36,6 +41,7 @@
 df [options]
   -h, --human-readable  print sizes in powers of 1024 (e.g., 1023M)
   -H, --si              print sizes in powers of 1000 (e.g., 1.1G)
+  -v, --verbose         print more info (non-standard output)
 ".Trim());
         }
     }

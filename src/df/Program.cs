@@ -4,31 +4,55 @@ var suffixes = new[] { "B", "K", "M", "G", "T", "P" };
 
 var options = ProgramOptions.From(args);
 
-var step = options.StandardInternationalUnits ? 1000 : 1024;
-Func<long, string> sizeFormatter = options.HumanReadable ? HumanReadableSize : PassThroughSize;
+var step = options.StandardInternationalUnits
+    ? 1000
+    : 1024;
+Func<long, string> sizeFormatter = options.HumanReadable
+    ? HumanReadableSize
+    : PassThroughSize;
 
-var collected = new List<string[]>
-{
-    new[] { "Drive", "Size", "Used", "Avail", "Use%" }
-};
+var collected = options.Verbose
+    ? new List<string[]>
+    {
+        new[] { "Drive", "Size", "Used", "Avail", "Use%", "Label" }
+    }
+    : new List<string[]>
+    {
+        new[] { "Drive", "Size", "Used", "Avail", "Use%" }
+    };
+
 foreach (var drive in DriveInfo.GetDrives())
 {
-    var used = drive.TotalSize - drive.AvailableFreeSpace;
-    collected.Add(new[]
-        {
-            drive.Name,
-            sizeFormatter(drive.TotalSize),
-            sizeFormatter(used),
-            sizeFormatter(drive.AvailableFreeSpace),
-            $"{Math.Round((used * 100) / (decimal) drive.TotalSize)}%"
-        }
-    );
+    collected.Add(RowFor(drive));
 }
 
-var colwidths = new[] { 0, 0, 0, 0, 0 };
+string[] RowFor(DriveInfo drive)
+{
+    var used = drive.TotalSize - drive.AvailableFreeSpace;
+    var result = new List<string>
+    {
+        drive.Name,
+        sizeFormatter(drive.TotalSize),
+        sizeFormatter(used),
+        sizeFormatter(drive.AvailableFreeSpace),
+        $"{Math.Round((used * 100) / (decimal) drive.TotalSize)}%"
+    };
+    if (options!.Verbose)
+    {
+        result.Add(drive.VolumeLabel);
+    }
+    return result.ToArray();
+}
+
+var colwidths = new List<int>();
+for (var i = 0; i < collected[0].Length; i++)
+{
+    colwidths.Add(0);
+}
+
 foreach (var item in collected)
 {
-    for (var i = 0; i < colwidths.Length; i++)
+    for (var i = 0; i < colwidths.Count; i++)
     {
         colwidths[i] = Math.Max(item[i].Length, colwidths[i]);
     }
@@ -39,7 +63,9 @@ foreach (var item in collected)
     Console.WriteLine(FormatLine(item, colwidths));
 }
 
-string FormatLine(string[] fields, int[] widths)
+// -- helpers
+
+string FormatLine(string[] fields, List<int> widths)
 {
     var parts = new List<string>();
     for (var i = 0; i < fields.Length; i++)
