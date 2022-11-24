@@ -1,17 +1,10 @@
 ﻿using df;
-using PeanutButter.EasyArgs;
 
 var suffixes = new[] { "B", "K", "M", "G", "T", "P" };
 
-var options = args.ParseTo<ProgramOptions>(out _, new ParserOptions()
-{
-    Description = new[]
-    {
-        "An opinionated, minimal df clone for windows"
-    },
-});
+var options = ProgramOptions.From(args);
 
-var step = options.SI ? 1000 : 1024;
+var step = options.StandardInternationalUnits ? 1000 : 1024;
 Func<long, string> sizeFormatter = options.HumanReadable ? HumanReadableSize : PassThroughSize;
 
 var collected = new List<string[]>
