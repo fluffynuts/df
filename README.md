@@ -34,12 +34,10 @@ or use a 1000 divisor instead of the generally-accepted 1024 with `--si`.
 it's fat
 ---
 
-Yes, this is a chonky boi when published (11mb), but it was quick to bang out in .net - if you
+Yes, this is a chonky boi when published (3mb with AOT), but it was quick to bang out in .net - if you
 want to keep it smaller, you probably only need, from a regular build:
 - df.exe
 - df.dll
-- PeanutButter.EasyArgs.dll
-- PeanutButter.DuckTyping.dll
 
-for a total of about 675k, which is still chonky compared with the native `df` coming
+for a total of about 160k, which is still chonky compared with the native `df` coming
 in at about 2k. C'est la vie!
