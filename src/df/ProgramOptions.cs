@@ -22,6 +22,7 @@
                         break;
                     case "--help":
                         ShowHelp();
+                        Environment.Exit(0);
                         break;
                 }
             }
