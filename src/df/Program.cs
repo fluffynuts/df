@@ -21,27 +21,50 @@ var collected = options.Verbose
         new[] { "Drive", "Size", "Used", "Avail", "Use%" }
     };
 
+var errors = new List<string>();
+
 foreach (var drive in DriveInfo.GetDrives())
 {
-    collected.Add(RowFor(drive));
+    collected.Add(RowFor(drive, out var error));
+    if (!string.IsNullOrWhiteSpace(error))
+    {
+        errors.Add(error);
+    }
 }
 
-string[] RowFor(DriveInfo drive)
+string[] RowFor(DriveInfo drive, out string error)
 {
-    var used = drive.TotalSize - drive.AvailableFreeSpace;
-    var result = new List<string>
+    try
     {
-        drive.Name,
-        sizeFormatter(drive.TotalSize),
-        sizeFormatter(used),
-        sizeFormatter(drive.AvailableFreeSpace),
-        $"{Math.Round((used * 100) / (decimal) drive.TotalSize)}%"
-    };
-    if (options!.Verbose)
-    {
-        result.Add(drive.VolumeLabel);
+        error = null;
+        var used = drive.TotalSize - drive.AvailableFreeSpace;
+        var result = new List<string>
+        {
+            drive.Name,
+            sizeFormatter(drive.TotalSize),
+            sizeFormatter(used),
+            sizeFormatter(drive.AvailableFreeSpace),
+            $"{Math.Round((used * 100) / (decimal) drive.TotalSize)}%"
+        };
+        if (options!.Verbose)
+        {
+            result.Add(drive.VolumeLabel);
+        }
+
+        return result.ToArray();
     }
-    return result.ToArray();
+    catch (Exception ex)
+    {
+        error = $"{drive.Name} :: {ex.Message}";
+        return new[]
+        {
+            drive.Name,
+            "-",
+            "-",
+            "-",
+            "-"
+        };
+    }
 }
 
 var colwidths = new List<int>();
@@ -61,6 +84,15 @@ foreach (var item in collected)
 foreach (var item in collected)
 {
     Console.WriteLine(FormatLine(item, colwidths));
+}
+
+if (errors.Any())
+{
+    Console.WriteLine("Errors encountered:");
+    foreach (var e in errors)
+    {
+        Console.WriteLine($"  {e}");
+    }
 }
 
 // -- helpers
